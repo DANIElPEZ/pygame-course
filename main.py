@@ -7,8 +7,11 @@ class Main:
      def __init__(self):
           running=True
           pygame.init()
+          #change the icon
+          icon=pygame.image.load('assets/icon.png')
+          pygame.display.set_icon(icon)
           #change title game
-          pygame.display.set_caption("game")
+          pygame.display.set_caption("Chicken hack")
           #create window instance
           window=pygame.display.set_mode((conf.width_window,conf.height_window))
 
@@ -24,13 +27,18 @@ class Main:
                animations_run_player.append(self.scale_image(img_player,conf.scale_player))
           
           #instance of player
-          player=Player(10,10,animations_idle_player, animations_run_player)
+          player=Player(30,30,animations_idle_player, animations_run_player)
 
           #create an image
           weapon_image=pygame.image.load('assets/phone.png')
           weapon_image=self.scale_image(weapon_image,conf.scale_weapon)
+          malware_bullet=pygame.image.load('assets/code.png')
           #instance of weapon
-          weapon=Weapon(weapon_image)
+          weapon=Weapon(weapon_image, malware_bullet)
+
+          'list of sprites'
+          #bullets list
+          bullets_list=pygame.sprite.Group()
 
           #moving variables
           is_running=False
@@ -64,8 +72,19 @@ class Main:
                player.draw(window)
 
                weapon.moving(delta_x)
-               weapon.update(player)
+               bullet=weapon.update(player)
                weapon.draw(window)
+
+               #add bullet to list of bullets
+               if bullet:
+                    bullets_list.add(bullet)
+
+               #draw bullets
+               for bullet_item in bullets_list:
+                    bullet_item.draw(window)
+               #update bullets
+               for bullet_update in bullets_list:
+                    bullet_update.update()
 
                #get all events
                for event in pygame.event.get():

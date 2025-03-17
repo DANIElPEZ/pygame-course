@@ -16,7 +16,7 @@ class Player:
           #get image
           self.player_current_animation=self.player_idle_animations[self.frame_index]
           #creating rectangle x,y,width,height
-          self.shape=pygame.Rect(0,0,conf.width_player,conf.height_player)
+          self.shape=self.player_current_animation.get_rect()
           #overriding x,y position and origin point in center of shape
           self.shape.center=(x,y)
 
