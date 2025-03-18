@@ -44,7 +44,7 @@ class Player:
           #drawing sprite
           window_context.blit(flip_image, image_rect.topleft)
           #drawing rectangle
-          pygame.draw.rect(window_context,conf.color_box_player,self.shape,1)
+#          pygame.draw.rect(window_context,conf.color_box_player,self.shape,1)
 
      #moving the player
      def moving(self,delta_x,delta_y):
@@ -54,3 +54,4 @@ class Player:
                self.move_backwards=False
           self.shape.x+=delta_x
           self.shape.y+=delta_y
+          

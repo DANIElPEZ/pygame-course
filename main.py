@@ -2,6 +2,7 @@ import pygame
 import settings as conf
 from player import Player
 from weapon import Weapon
+import random
 
 class Main:
      def __init__(self):
@@ -11,37 +12,51 @@ class Main:
           icon=pygame.image.load('assets/icon.png')
           pygame.display.set_icon(icon)
           #change title game
-          pygame.display.set_caption("Chicken hack")
+          pygame.display.set_caption("The hacker chicken")
           #create window instance
           window=pygame.display.set_mode((conf.width_window,conf.height_window))
 
           #creating an animation
           animations_idle_player=[]
           for img in range(1,3):
-               img_player=pygame.image.load(f'assets/Idle{img}.png')
+               img_player=pygame.image.load(f'assets/Idle_player{img}.png')
                animations_idle_player.append(self.scale_image(img_player,conf.scale_player))
 
           animations_run_player=[]
           for img in range(1,3):
-               img_player=pygame.image.load(f'assets/run{img}.png')
+               img_player=pygame.image.load(f'assets/run_player{img}.png')
                animations_run_player.append(self.scale_image(img_player,conf.scale_player))
           
           #instance of player
           player=Player(30,30,animations_idle_player, animations_run_player)
 
           #create an image
-          weapon_image=pygame.image.load('assets/phone.png')
+          weapon_image=pygame.image.load('assets/gun.png')
           weapon_image=self.scale_image(weapon_image,conf.scale_weapon)
-          malware_bullet=pygame.image.load('assets/code.png')
+          malware_bullet=pygame.image.load('assets/bullet.png')
           #instance of weapon
           weapon=Weapon(weapon_image, malware_bullet)
 
           'list of sprites'
           #bullets list
           bullets_list=pygame.sprite.Group()
+          #list of enemies
+          enemies_list=[]
 
+          #enemies
+          animation_walking_enemie=[]
+          for img in range(1,3):
+               img_enemie=pygame.image.load(f'assets/Walking_enemie{img}.png')
+               animation_walking_enemie.append(self.scale_image(img_enemie,conf.scale_player))
+
+          #initial position
+          for enemie in range(10):
+               x_enemie=random.randint(0,conf.width_window)
+               y_enemie=random.randint(0,conf.height_window)
+               enemie=Player(x_enemie,y_enemie,animation_walking_enemie,[])
+               enemies_list.append(enemie)
           #moving variables
-          is_running=False
+          is_running_player=False
           #is moving
           move_up=move_down=move_left=move_right=False
           #controling frames per second
@@ -68,12 +83,20 @@ class Main:
 
                #drawing the objects on window
                player.moving(delta_x,delta_y)
-               player.update(is_running)
+               player.update(is_running_player)
                player.draw(window)
 
                weapon.moving(delta_x)
                bullet=weapon.update(player)
                weapon.draw(window)
+
+               x_enemie=random.randint(0,conf.width_window)
+               y_enemie=random.randint(0,conf.height_window)
+
+               for enemie_update in enemies_list:
+               #enemie.moving(x_enemie,y_enemie)
+                    enemie_update.update(False)
+                    enemie_update.draw(window)
 
                #add bullet to list of bullets
                if bullet:
@@ -93,7 +116,7 @@ class Main:
                          running=False
 
                     if event.type == pygame.KEYDOWN:
-                         is_running=True
+                         is_running_player=True
                          if event.key == pygame.K_w:
                               move_up=True
                          if event.key == pygame.K_s:
@@ -104,7 +127,7 @@ class Main:
                               move_right=True
 
                     if event.type == pygame.KEYUP:
-                         is_running=False
+                         is_running_player=False
                          if event.key == pygame.K_w:
                               move_up=False
                          if event.key == pygame.K_s:
